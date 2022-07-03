@@ -30,19 +30,23 @@
           />
         </el-form-item>
 
-        <el-button type="primary" icon="el-icon-search" @click="fetchData()"
-          >查询</el-button
-        >
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="fetchData()"
+        >查询</el-button>
         <el-button type="default" @click="resetData()">清空</el-button>
       </el-form>
     </el-card>
     <!-- 工具按钮 -->
     <el-card class="operate-container" shadow="never">
-      <i class="el-icon-tickets" style="margin-top: 5px"></i>
+      <i class="el-icon-tickets" style="margin-top: 5px" />
       <span style="margin-top: 5px">数据列表</span>
-      <el-button class="btn-add" @click="add()" style="margin-left: 10px"
-        >添加</el-button
-      >
+      <el-button
+        class="btn-add"
+        style="margin-left: 10px"
+        @click="add()"
+      >添加</el-button>
       <el-button class="btn-add" @click="batchRemove()">批量删除</el-button>
     </el-card>
     <!-- 表格 -->
@@ -61,9 +65,11 @@
       <el-table-column prop="name" label="名称" width="80" />
       <el-table-column label="头衔" width="90">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.level === 1" type="success" size="mini"
-            >高级讲师</el-tag
-          >
+          <el-tag
+            v-if="scope.row.level === 1"
+            type="success"
+            size="mini"
+          >高级讲师</el-tag>
           <el-tag v-if="scope.row.level === 0" size="mini">首席讲师</el-tag>
         </template>
       </el-table-column>
@@ -72,9 +78,11 @@
       <el-table-column prop="joinDate" label="入驻时间" width="160" />
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <el-button type="text" size="mini" @click="removeById(scope.row.id)"
-            >删除</el-button
-          >
+          <el-button
+            type="text"
+            size="mini"
+            @click="removeById(scope.row.id)"
+          >删除</el-button>
           <router-link :to="'/vod/teacher/edit/' + scope.row.id">
             <el-button type="text" size="mini">修改</el-button>
           </router-link>
@@ -96,7 +104,7 @@
 </template>
 
 <script>
-import teacherApi from "@/api/vod/teacher";
+import teacherApi from '@/api/vod/teacher'
 
 export default {
   data() {
@@ -106,83 +114,83 @@ export default {
       page: 1, // 页码
       limit: 10, // 每页记录数
       searchObj: {}, // 查询条件
-      multipleSelection: [], // 批量删除选中的记录列表
-    };
+      multipleSelection: [] // 批量删除选中的记录列表
+    }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     batchRemove() {
       if (this.multipleSelection.length === 0) {
-        this.$message.warning("请选择要删除的记录！");
-        return;
+        this.$message.warning('请选择要删除的记录！')
+        return
       }
-      this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-        var idList = [];
+        var idList = []
         this.multipleSelection.forEach((element) => {
-          idList.push(element.id);
-        });
+          idList.push(element.id)
+        })
 
         teacherApi.benchRemoveTeacher(idList).then((response) => {
           this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-          this.fetchData();
-        });
-      });
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.fetchData()
+        })
+      })
     },
     handleSelectionChange(selection) {
-      console.log(selection);
-      this.multipleSelection = selection;
+      console.log(selection)
+      this.multipleSelection = selection
     },
     add() {
-      this.$router.push("/vod/teacher/create");
+      this.$router.push('/vod/teacher/create')
     },
     fetchData() {
       teacherApi
         .pageList(this.page, this.limit, this.searchObj)
         .then((response) => {
-          this.list = response.data.records;
-          this.total = response.data.total;
-        });
+          this.list = response.data.records
+          this.total = response.data.total
+        })
     },
     // 每页记录数改变，size：回调参数，表示当前选中的“每页条数”
     changePageSize(size) {
-      this.limit = size;
-      this.fetchData();
+      this.limit = size
+      this.fetchData()
     },
     // 改变页码，page：回调参数，表示当前选中的“页码 ”
     changeCurrentPage(page) {
-      this.page = page;
-      this.fetchData();
+      this.page = page
+      this.fetchData()
     },
     // 重置表单
     resetData() {
-      this.searchObj = {};
-      this.fetchData();
+      this.searchObj = {}
+      this.fetchData()
     },
     // 删除讲师
     removeById(id) {
-      this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
+      this.$confirm('此操作将删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
         teacherApi.removeById(id).then((response) => {
           this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
-          this.fetchData();
-        });
-      });
-    },
-  },
-};
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.fetchData()
+        })
+      })
+    }
+  }
+}
 </script>
